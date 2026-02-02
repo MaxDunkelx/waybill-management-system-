@@ -1,0 +1,422 @@
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: #2c3e50;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.tenant-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.app-nav {
+  background: #34495e;
+  padding: 0.5rem 2rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.app-nav a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.app-nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.app-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Buttons */
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #7f8c8d;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Tenant Selector */
+.tenant-selector {
+  max-width: 500px;
+  margin: 5rem auto;
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tenant-form {
+  margin-top: 2rem;
+}
+
+.current-tenant {
+  text-align: center;
+}
+
+.tenant-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 1rem 0;
+}
+
+/* Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.data-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+.data-table tr:hover {
+  background: #f8f9fa;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-pending {
+  background: #f39c12;
+  color: white;
+}
+
+.status-delivered {
+  background: #27ae60;
+  color: white;
+}
+
+.status-cancelled {
+  background: #e74c3c;
+  color: white;
+}
+
+.status-disputed {
+  background: #e67e22;
+  color: white;
+}
+
+/* Summary Cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.summary-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.summary-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #3498db;
+  margin-top: 0.5rem;
+}
+
+.summary-card dl {
+  margin: 0;
+}
+
+.summary-card dt {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.summary-card dd {
+  margin-left: 0;
+  color: #555;
+}
+
+/* Error Messages */
+.error-message {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+/* Import Results */
+.import-container,
+.waybill-list-container,
+.waybill-details-container,
+.summary-container,
+.supplier-summary-container {
+  max-width: 1200px;
+}
+
+.result-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.errors-section,
+.warnings-section {
+  margin: 2rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.errors-section h3 {
+  color: #e74c3c;
+}
+
+.warnings-section h3 {
+  color: #f39c12;
+}
+
+.error-item {
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  background: white;
+  border-left: 3px solid #e74c3c;
+  border-radius: 4px;
+}
+
+.error-field {
+  display: inline-block;
+  margin-left: 1rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.error-row-data {
+  margin-top: 0.5rem;
+  color: #999;
+  font-family: monospace;
+  font-size: 0.875rem;
+}
+
+/* Filters */
+.filters-section {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+/* Details */
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.details-section {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.details-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.details-section h2 {
+  margin-top: 0;
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+.details-section dl {
+  margin: 0;
+}
+
+.details-section dt {
+  font-weight: 600;
+  margin-top: 1rem;
+  color: #555;
+}
+
+.details-section dd {
+  margin-left: 0;
+  color: #2c3e50;
+}
+
+.notes-text {
+  white-space: pre-wrap;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.status-update-form {
+  margin-top: 1rem;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+/* Summary Sections */
+.summary-section {
+  margin: 2rem 0;
+}
+
+.summary-section h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}

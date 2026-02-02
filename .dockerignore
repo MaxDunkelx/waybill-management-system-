@@ -1,0 +1,55 @@
+# Build outputs
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+
+# IDE files
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# Test files (not needed in production image)
+**/Tests/
+**/*.Tests.csproj
+**/tests/
+
+# Documentation (keep README.md only)
+docs/
+*.md
+!README.md
+
+# Reports (not needed in Docker)
+*_REPORT.md
+*_VERIFICATION.md
+*_EXPLANATION.md
+cleanup.sh
+
+# Git
+.git/
+.gitignore
+
+# Docker files themselves
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.cache
+*.pidb
+*.svclog
+
+# Frontend build (will be built in Docker if needed)
+frontend/dist/
+frontend/node_modules/

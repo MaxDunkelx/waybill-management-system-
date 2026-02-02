@@ -1,0 +1,358 @@
+### Waybill Management System API - Complete Testing File
+### 
+### IMPORTANT: All requests require the X-Tenant-ID header
+### Valid tenant IDs: TENANT001, TENANT002, TENANT003
+### 
+### You can set a default tenant ID by uncommenting and setting the variable below:
+### @tenantId = TENANT001
+
+@baseUrl = http://localhost:5001
+@tenantId = TENANT001
+
+### ============================================================================
+### TENANT TEST ENDPOINT
+### ============================================================================
+
+### Test tenant resolution
+GET {{baseUrl}}/api/TenantTest/test
+X-Tenant-ID: {{tenantId}}
+
+### ============================================================================
+### CSV IMPORT ENDPOINT
+### ============================================================================
+
+### Import waybills from CSV file
+### Note: This is a multipart/form-data request
+### In VS Code REST Client, use the file path relative to the workspace
+POST {{baseUrl}}/api/WaybillImport/import
+X-Tenant-ID: {{tenantId}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="waybills.csv"
+Content-Type: text/csv
+
+< ./waybills_sample_data.csv
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### ============================================================================
+### WAYBILL ENDPOINTS
+### ============================================================================
+
+### Get all waybills (paginated, with filtering)
+GET {{baseUrl}}/api/Waybills?pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Get all waybills with status filter (DELIVERED)
+GET {{baseUrl}}/api/Waybills?status=Delivered&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Get all waybills with date range filter
+GET {{baseUrl}}/api/Waybills?waybillDateFrom=2024-09-01&waybillDateTo=2024-09-30&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Get all waybills with project filter
+GET {{baseUrl}}/api/Waybills?projectId=PRJ001&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Get all waybills with supplier filter
+GET {{baseUrl}}/api/Waybills?supplierId=SUP001&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Get all waybills with product code filter
+GET {{baseUrl}}/api/Waybills?productCode=B30&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Get all waybills with Hebrew text search
+GET {{baseUrl}}/api/Waybills?searchText=תל%20אביב&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Get all waybills with multiple filters
+GET {{baseUrl}}/api/Waybills?status=Delivered&waybillDateFrom=2024-09-01&waybillDateTo=2024-09-30&projectId=PRJ001&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Get single waybill by ID
+GET {{baseUrl}}/api/Waybills/WB-2024-001
+X-Tenant-ID: {{tenantId}}
+
+### Get waybills for a specific project
+GET {{baseUrl}}/api/Waybills/projects/PRJ001/waybills
+X-Tenant-ID: {{tenantId}}
+
+### Get waybill summary (all statistics)
+GET {{baseUrl}}/api/Waybills/summary
+X-Tenant-ID: {{tenantId}}
+
+### Get waybill summary with date range
+GET {{baseUrl}}/api/Waybills/summary?dateFrom=2024-09-01&dateTo=2024-09-30
+X-Tenant-ID: {{tenantId}}
+
+### Update waybill status (PENDING → DELIVERED)
+PATCH {{baseUrl}}/api/Waybills/WB-2024-001/status
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "status": "Delivered",
+  "notes": "Successfully delivered to site at 14:30"
+}
+
+### Update waybill status (DELIVERED → DISPUTED)
+PATCH {{baseUrl}}/api/Waybills/WB-2024-001/status
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "status": "Disputed",
+  "notes": "Quantity discrepancy - actual delivery was 10.5 cubic meters, not 12.5"
+}
+
+### Update waybill (with optimistic locking)
+### First, get the waybill to obtain the Version field
+GET {{baseUrl}}/api/Waybills/WB-2024-001
+X-Tenant-ID: {{tenantId}}
+
+### Then update with the Version from the response above
+PUT {{baseUrl}}/api/Waybills/WB-2024-001
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "waybillDate": "2024-09-01",
+  "deliveryDate": "2024-09-01",
+  "quantity": 13.0,
+  "unitPrice": 450.00,
+  "totalAmount": 5850.00,
+  "vehicleNumber": "78-542-31",
+  "driverName": "יוסי כהן",
+  "deliveryAddress": "רחוב הירקון 45 תל אביב",
+  "notes": "Updated delivery information",
+  "version": "BASE64_ENCODED_VERSION_FROM_GET_RESPONSE"
+}
+
+### ============================================================================
+### SUPPLIER ENDPOINTS
+### ============================================================================
+
+### Get supplier summary statistics
+GET {{baseUrl}}/api/Suppliers/SUP001/summary
+X-Tenant-ID: {{tenantId}}
+
+### Get supplier summary for different supplier
+GET {{baseUrl}}/api/Suppliers/SUP002/summary
+X-Tenant-ID: {{tenantId}}
+
+### ============================================================================
+### REPORTS ENDPOINTS
+### ============================================================================
+
+### Generate monthly report (October 2024)
+POST {{baseUrl}}/api/Reports/generate-monthly-report
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "year": 2024,
+  "month": 10
+}
+
+### Generate monthly report (September 2024)
+POST {{baseUrl}}/api/Reports/generate-monthly-report
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "year": 2024,
+  "month": 9
+}
+
+### Attempt to generate report while another is in progress (should return 409 Conflict)
+### Run this immediately after the previous request to test distributed locking
+POST {{baseUrl}}/api/Reports/generate-monthly-report
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "year": 2024,
+  "month": 10
+}
+
+### ============================================================================
+### MULTI-TENANT ISOLATION TESTS
+### ============================================================================
+
+### Test 1: Import data for TENANT001
+POST {{baseUrl}}/api/WaybillImport/import
+X-Tenant-ID: TENANT001
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="tenant001_data.csv"
+Content-Type: text/csv
+
+< ./tenant001_data.csv
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test 2: Query waybills as TENANT001 (should see only TENANT001 data)
+GET {{baseUrl}}/api/Waybills?pageNumber=1&pageSize=20
+X-Tenant-ID: TENANT001
+
+### Test 3: Query waybills as TENANT002 (should see only TENANT002 data, NOT TENANT001)
+GET {{baseUrl}}/api/Waybills?pageNumber=1&pageSize=20
+X-Tenant-ID: TENANT002
+
+### Test 4: Try to access TENANT001's waybill as TENANT002 (should return 404)
+GET {{baseUrl}}/api/Waybills/WB-2024-001
+X-Tenant-ID: TENANT002
+
+### Test 5: Try to update TENANT001's waybill as TENANT002 (should return 404)
+PATCH {{baseUrl}}/api/Waybills/WB-2024-001/status
+X-Tenant-ID: TENANT002
+Content-Type: application/json
+
+{
+  "status": "Delivered"
+}
+
+### ============================================================================
+### ERROR CASE TESTS
+### ============================================================================
+
+### Test missing tenant ID (should return 400 Bad Request)
+GET {{baseUrl}}/api/Waybills?pageNumber=1&pageSize=20
+
+### Test invalid status transition (PENDING → DISPUTED - should return 400)
+PATCH {{baseUrl}}/api/Waybills/WB-2024-008/status
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "status": "Disputed"
+}
+
+### Test concurrent update conflict (should return 409 Conflict)
+### Step 1: Get waybill to obtain Version
+GET {{baseUrl}}/api/Waybills/WB-2024-001
+X-Tenant-ID: {{tenantId}}
+
+### Step 2: Update with old version (simulate concurrent update)
+PUT {{baseUrl}}/api/Waybills/WB-2024-001
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "quantity": 15.0,
+  "version": "OLD_VERSION_VALUE"
+}
+
+### Test missing version in update (should return 400 Bad Request)
+PUT {{baseUrl}}/api/Waybills/WB-2024-001
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "quantity": 15.0
+}
+
+### Test invalid monthly report parameters (should return 400 Bad Request)
+POST {{baseUrl}}/api/Reports/generate-monthly-report
+X-Tenant-ID: {{tenantId}}
+Content-Type: application/json
+
+{
+  "year": 2019,
+  "month": 13
+}
+
+### ============================================================================
+### FILTERING AND SEARCH EXAMPLES
+### ============================================================================
+
+### Filter by status: PENDING
+GET {{baseUrl}}/api/Waybills?status=Pending&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Filter by status: DELIVERED
+GET {{baseUrl}}/api/Waybills?status=Delivered&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Filter by status: CANCELLED
+GET {{baseUrl}}/api/Waybills?status=Cancelled&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Filter by status: DISPUTED
+GET {{baseUrl}}/api/Waybills?status=Disputed&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Filter by delivery date range
+GET {{baseUrl}}/api/Waybills?deliveryDateFrom=2024-09-01&deliveryDateTo=2024-09-15&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Filter by product code: B25
+GET {{baseUrl}}/api/Waybills?productCode=B25&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Filter by product code: B30
+GET {{baseUrl}}/api/Waybills?productCode=B30&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Filter by product code: B35
+GET {{baseUrl}}/api/Waybills?productCode=B35&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Filter by product code: B40
+GET {{baseUrl}}/api/Waybills?productCode=B40&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Search Hebrew text in project/supplier names
+GET {{baseUrl}}/api/Waybills?searchText=חיפה&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Search Hebrew text: תל אביב
+GET {{baseUrl}}/api/Waybills?searchText=תל%20אביב&pageNumber=1&pageSize=20
+X-Tenant-ID: {{tenantId}}
+
+### Pagination: Page 1
+GET {{baseUrl}}/api/Waybills?pageNumber=1&pageSize=10
+X-Tenant-ID: {{tenantId}}
+
+### Pagination: Page 2
+GET {{baseUrl}}/api/Waybills?pageNumber=2&pageSize=10
+X-Tenant-ID: {{tenantId}}
+
+### ============================================================================
+### SUMMARY AND ANALYTICS EXAMPLES
+### ============================================================================
+
+### Get complete summary (all time)
+GET {{baseUrl}}/api/Waybills/summary
+X-Tenant-ID: {{tenantId}}
+
+### Get summary for September 2024
+GET {{baseUrl}}/api/Waybills/summary?dateFrom=2024-09-01&dateTo=2024-09-30
+X-Tenant-ID: {{tenantId}}
+
+### Get summary for October 2024
+GET {{baseUrl}}/api/Waybills/summary?dateFrom=2024-10-01&dateTo=2024-10-31
+X-Tenant-ID: {{tenantId}}
+
+### Get summary for Q3 2024 (July-September)
+GET {{baseUrl}}/api/Waybills/summary?dateFrom=2024-07-01&dateTo=2024-09-30
+X-Tenant-ID: {{tenantId}}
+
+### ============================================================================
+### NOTES
+### ============================================================================
+###
+### 1. All requests require X-Tenant-ID header
+### 2. Valid tenant IDs: TENANT001, TENANT002, TENANT003
+### 3. Status enum values: Pending, Delivered, Cancelled, Disputed (case-insensitive)
+### 4. Date format: YYYY-MM-DD (e.g., 2024-09-01)
+### 5. Version field: Base64-encoded byte array from GET response
+### 6. CSV import: File must be UTF-8 encoded with Hebrew text support
+### 7. Multi-tenant isolation: Each tenant can only see their own data
+### 8. Optimistic locking: Always include Version field in PUT requests
+### 9. Distributed locking: Monthly report generation is single-user execution
+### 10. Error responses: Check status code and error message in response body
+###
+### ============================================================================
