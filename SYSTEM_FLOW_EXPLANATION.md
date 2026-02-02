@@ -260,7 +260,7 @@ apiClient.interceptors.response.use(
 
 ## 📋 CSV Import Flow - Complete Example
 
-### Example: POST /api/WaybillImport/import
+### Example: POST /api/waybills/import
 
 #### **Step 1: Frontend Upload** (`frontend/src/components/WaybillImport.tsx`)
 
@@ -273,7 +273,7 @@ const response = await importService.importWaybills(formData);
 
 **Request:**
 - Method: `POST`
-- URL: `http://localhost:5001/api/WaybillImport/import`
+- URL: `http://localhost:5001/api/waybills/import`
 - Headers: `X-Tenant-ID: TENANT001`, `Content-Type: multipart/form-data`
 - Body: CSV file
 

@@ -68,7 +68,7 @@ namespace WaybillManagementSystem.Controllers;
 /// - Uses database transactions to ensure data consistency
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/waybills")]
 public class WaybillImportController : ControllerBase
 {
     private readonly IWaybillImportService _importService;
@@ -81,6 +81,7 @@ public class WaybillImportController : ControllerBase
     /// </summary>
     /// <param name="importService">Service for importing waybill data from CSV.</param>
     /// <param name="tenantService">Service for accessing the current tenant ID.</param>
+    /// <param name="jobService">Service for managing background jobs.</param>
     /// <param name="logger">Logger for recording controller operations.</param>
     public WaybillImportController(
         IWaybillImportService importService,

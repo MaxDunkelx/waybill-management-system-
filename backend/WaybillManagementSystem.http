@@ -24,7 +24,7 @@ X-Tenant-ID: {{tenantId}}
 ### Import waybills from CSV file
 ### Note: This is a multipart/form-data request
 ### In VS Code REST Client, use the file path relative to the workspace
-POST {{baseUrl}}/api/WaybillImport/import
+POST {{baseUrl}}/api/waybills/import
 X-Tenant-ID: {{tenantId}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -76,7 +76,7 @@ GET {{baseUrl}}/api/Waybills/WB-2024-001
 X-Tenant-ID: {{tenantId}}
 
 ### Get waybills for a specific project
-GET {{baseUrl}}/api/Waybills/projects/PRJ001/waybills
+GET {{baseUrl}}/api/projects/PRJ001/waybills
 X-Tenant-ID: {{tenantId}}
 
 ### Get waybill summary (all statistics)
@@ -182,7 +182,7 @@ Content-Type: application/json
 ### ============================================================================
 
 ### Test 1: Import data for TENANT001
-POST {{baseUrl}}/api/WaybillImport/import
+POST {{baseUrl}}/api/waybills/import
 X-Tenant-ID: TENANT001
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 

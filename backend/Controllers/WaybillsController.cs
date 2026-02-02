@@ -19,10 +19,9 @@ namespace WaybillManagementSystem.Controllers;
 /// ensures that all database queries are automatically scoped to the current tenant,
 /// providing defense-in-depth security.
 /// 
-/// ENDPOINTS:
-/// - GET /api/waybills - List waybills with filtering and pagination
-/// - GET /api/waybills/{id} - Get single waybill by ID
-/// - GET /api/projects/{projectId}/waybills - Get waybills for a specific project
+    /// ENDPOINTS:
+    /// - GET /api/waybills - List waybills with filtering and pagination
+    /// - GET /api/waybills/{id} - Get single waybill by ID
 /// 
 /// FILTERING:
 /// The list endpoint supports comprehensive filtering via query parameters:
@@ -154,43 +153,6 @@ public class WaybillsController : ControllerBase
             {
                 error = "Internal server error",
                 message = "An error occurred while retrieving the waybill."
-            });
-        }
-    }
-
-    /// <summary>
-    /// Gets all waybills for a specific project, filtered by the current tenant.
-    /// Returns an empty list if the project has no waybills or doesn't belong to the tenant.
-    /// </summary>
-    /// <param name="projectId">The project ID to filter by.</param>
-    /// <returns>
-    /// List of waybills for the specified project.
-    /// Status 200 if successful (may return empty list if project has no waybills).
-    /// </returns>
-    [HttpGet("projects/{projectId}/waybills")]
-    [ProducesResponseType(typeof(List<WaybillListDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<WaybillListDto>>> GetWaybillsByProject(string projectId)
-    {
-        // Tenant ID is guaranteed to be available - middleware validates it before reaching controllers
-        var tenantId = _tenantService.GetCurrentTenantId();
-
-        _logger.LogInformation(
-            "Retrieving waybills for project {ProjectId} and tenant {TenantId}",
-            projectId,
-            tenantId);
-
-        try
-        {
-            var waybills = await _waybillService.GetByProjectIdAsync(projectId, tenantId);
-            return Ok(waybills);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error retrieving waybills for project {ProjectId} and tenant {TenantId}", projectId, tenantId);
-            return StatusCode(500, new
-            {
-                error = "Internal server error",
-                message = "An error occurred while retrieving waybills for the project."
             });
         }
     }

@@ -100,7 +100,7 @@ HTTP Request → TenantMiddleware → TenantService → EF Core Query Filter →
 ### CSV Import Flow
 
 ```
-1. POST /api/WaybillImport/import with CSV file
+1. POST /api/waybills/import with CSV file
 2. TenantMiddleware validates X-Tenant-ID header
 3. WaybillImportService parses CSV with CsvHelper
 4. WaybillValidationService validates each row:
@@ -183,14 +183,14 @@ gekko/
 | `PUT` | `/api/Waybills/{id}` | Update waybill (with optimistic locking) |
 | `PATCH` | `/api/Waybills/{id}/status` | Update waybill status (with business rules) |
 | `GET` | `/api/Waybills/summary` | Get aggregated statistics |
-| `GET` | `/api/Waybills/projects/{projectId}/waybills` | Get waybills for a project |
+| `GET` | `/api/projects/{id}/waybills` | Get waybills for a project |
 
 ### Import
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/WaybillImport/import` | Import CSV file (synchronous) |
-| `POST` | `/api/WaybillImport/import-async` | Import CSV file (asynchronous, returns job ID) |
+| `POST` | `/api/waybills/import` | Import CSV file (synchronous) |
+| `POST` | `/api/waybills/import-async` | Import CSV file (asynchronous, returns job ID) |
 
 ### Suppliers
 

@@ -37,7 +37,7 @@ export const waybillService = {
 
   // Get waybills by project
   async getWaybillsByProject(projectId: string): Promise<WaybillDto[]> {
-    const response = await apiClient.get(`/api/Waybills/projects/${projectId}/waybills`);
+    const response = await apiClient.get(`/api/projects/${projectId}/waybills`);
     return response.data;
   },
 

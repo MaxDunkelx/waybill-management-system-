@@ -7,7 +7,7 @@ export const importService = {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await apiClient.post('/api/WaybillImport/import', formData, {
+    const response = await apiClient.post('/api/waybills/import', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
