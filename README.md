@@ -27,41 +27,36 @@ A production-quality .NET 10 Web API for managing construction waybills with mul
 
 ### Prerequisites
 
-- .NET 10 SDK
-- Docker & Docker Compose
-- SQL Server (via Docker)
-- RabbitMQ (via Docker)
-- Redis (via Docker, optional)
+- **Docker Desktop** (includes Docker Compose)
+  - Download: https://www.docker.com/products/docker-desktop
+  - Verify: `docker --version` and `docker-compose --version`
 
-### 1. Start Services
+That's all you need! Everything else (SQL Server, RabbitMQ, Redis, .NET runtime) runs in Docker containers.
 
-```bash
-docker-compose up -d
-```
-
-This starts:
-- **SQL Server** on port `1433`
-- **RabbitMQ** on port `5672` (Management UI: `http://localhost:15672`, admin/admin)
-- **Redis** on port `6379`
-
-### 2. Setup Database
+### 1. Start All Services (One Command!)
 
 ```bash
-cd backend
-dotnet ef database update
+docker-compose up
 ```
 
-### 3. Run Backend API
+This single command:
+- Starts **SQL Server** on port `1433`
+- Starts **RabbitMQ** on port `5672` (Management UI: `http://localhost:15672`, admin/admin)
+- Starts **Redis** on port `6379`
+- Builds and starts **Backend API** on port `5001`
+- **Automatically applies database migrations** (no manual steps needed!)
 
-```bash
-cd backend
-dotnet run
-```
+**That's it!** The system is ready in ~30-35 seconds.
 
-API available at:
-- **HTTPS**: `https://localhost:5001`
-- **HTTP**: `http://localhost:5000`
-- **Swagger UI**: `https://localhost:5001/swagger`
+### 2. Access the System
+
+Once `docker-compose up` completes, the system is fully operational:
+
+- **API**: `http://localhost:5001`
+- **Swagger UI**: `http://localhost:5001/swagger`
+- **RabbitMQ Management**: `http://localhost:15672` (admin/admin)
+
+**Note**: Database migrations are applied automatically on backend startup. No manual `dotnet ef database update` required!
 
 ### 4. Run Frontend (Optional)
 
