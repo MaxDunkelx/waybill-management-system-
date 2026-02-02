@@ -31,8 +31,10 @@ public class WaybillImportIntegrationTests : IDisposable
     public WaybillImportIntegrationTests()
     {
         // Create in-memory database for testing
+        // Suppress transaction warning since in-memory database doesn't support transactions
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDb_Import_{Guid.NewGuid()}")
+            .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.InMemoryEventId.TransactionIgnoredWarning))
             .Options;
 
         var serviceProvider = new ServiceCollection()
@@ -41,6 +43,12 @@ public class WaybillImportIntegrationTests : IDisposable
 
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         var httpContextAccessor = new Microsoft.AspNetCore.Http.HttpContextAccessor();
+        
+        // Set up HttpContext with tenant ID for tests
+        var httpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext();
+        httpContext.Items[WaybillManagementSystem.Middleware.TenantMiddleware.TenantIdContextKey] = TestTenantId;
+        httpContextAccessor.HttpContext = httpContext;
+        
         var tenantService = new TenantService(httpContextAccessor, loggerFactory.CreateLogger<TenantService>());
 
         _dbContext = new ApplicationDbContext(options, tenantService);

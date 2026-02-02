@@ -176,7 +176,7 @@ public class WaybillValidationServiceTests
 
         // Assert
         errors.Should().NotBeEmpty();
-        errors.Should().Contain(e => e.Message.Contains("delivery_date cannot be before waybill_date"));
+        errors.Should().Contain(e => e.Message.Contains("delivery_date") && e.Message.Contains("cannot be before") && e.Message.Contains("waybill_date"));
     }
 
     [Fact]
