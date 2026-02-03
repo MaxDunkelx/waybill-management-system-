@@ -283,10 +283,12 @@ public class WaybillImportService : IWaybillImportService
             // Rows with validation errors are excluded but errors are reported.
 
             var rowNumber = 0; // Track row number (0 = header, 1+ = data rows)
+            var dataRowCount = 0; // Track actual number of data rows processed
 
             await foreach (var record in csv.GetRecordsAsync<ImportWaybillDto>())
             {
-                rowNumber = csv.Parser.Row; // Current row number (1-based for data rows)
+                rowNumber = csv.Parser.Row; // Current row number (1-based, includes header)
+                dataRowCount++; // Increment count of data rows processed
                 var rowData = csv.Parser.RawRecord ?? string.Empty;
 
                 try
@@ -351,7 +353,10 @@ public class WaybillImportService : IWaybillImportService
                 }
             }
 
-            result.TotalRows = rowNumber; // Total data rows processed
+            // TotalRows should be the number of data rows processed (excluding header)
+            // csv.Parser.Row is 1-based and includes the header row, so we use dataRowCount
+            // which accurately counts only the data rows that were processed
+            result.TotalRows = dataRowCount;
             result.Warnings = warnings;
 
             // ============================================================================
